@@ -1,5 +1,5 @@
 {
-  "name": "react-test",
+  "name": "react-test-work",
   "version": "0.1.0",
   "private": true,
   "homepage": "https://maxim1209.github.io/react-test-work",
@@ -20,7 +20,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "predeploy": "npm run build",
-    "deploy": "react-test-work -d build"
+    "deploy": "gh-pages -d build"
   },
   "eslintConfig": {
     "extends": [
