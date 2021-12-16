@@ -1,7 +1,12 @@
-export default function Basket(props) {
-  const { cartItems, onAdd, onRemove } = props;
-  const totalPrice = cartItems.reduce((accum, item) => accum + item.price, 0);
+import * as PropTypes from "prop-types";
 
+const CartComponent = (
+  { 
+  cartItems,
+  onAdd,
+  onRemove}
+  ) => {
+  const totalPrice = cartItems.reduce((accum, item) => accum + item.price, 0);
   return (
     <div className="section_cart">
       <h2 className="section_name">Cart Items</h2>
@@ -36,7 +41,7 @@ export default function Basket(props) {
         ))}
         {cartItems.length !== 0 && (
           <>
-            <hr/>
+            <hr />
             <div className="item_price">
               <div className="item_total">
                 <strong>Total Price:</strong>
@@ -50,6 +55,18 @@ export default function Basket(props) {
       </div>
     </div>
   );
-}
+};
 
-export { Basket };
+CartComponent.propTypes = {
+  onRemove: PropTypes.func.isRequired,
+  onAdd: PropTypes.func.isRequired,
+  item: PropTypes.object.isRequired,
+  accum: PropTypes.object.isRequired
+};
+
+CartComponent.defaultProps = {
+  item: {},
+  accum: {}
+};
+
+export default CartComponent;

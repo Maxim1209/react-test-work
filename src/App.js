@@ -1,9 +1,9 @@
-import Header from "./Components/Header";
-import Main from "./Components/Main";
-import Basket from "./Components/Cart";
+import Header from "./Components/HeaderComponent";
+import Basket from "./Components/CartComponent";
 import data from "./configs/products";
 import { Routes, Route } from "react-router-dom";
 import { useState } from "react";
+import MainComponent from "./Components/MainComponent";
 
 function App() {
   const { products } = data;
@@ -83,7 +83,7 @@ function App() {
           <Route
             exact
             path="/"
-            element={<Main products={products} onAdd={onAdd}></Main>}
+            element={<MainComponent products={products} onAdd={onAdd}></MainComponent>}
           />
           <Route
             exact
