@@ -1,15 +1,12 @@
 import * as PropTypes from "prop-types";
 
-const CartComponent = (
-  { 
-  cartItems,
-  onAdd,
-  onRemove}
-  ) => {
+const CartComponent = ({ cartItems, onAdd, onRemove, onDelete }) => {
   const totalPrice = cartItems.reduce((accum, item) => accum + item.price, 0);
   return (
     <div className="section_cart">
-      <h2 className="section_name">Cart Items</h2>
+      <div className="cart_header">
+        <h2 className="section_title">My Shopping Cart</h2>
+      </div>
       <div>
         <div className="cart_empty">
           {cartItems.length === 0 && (
@@ -27,15 +24,17 @@ const CartComponent = (
           <div key={item.id} className="cart_product">
             <div className="item_name">{item.name}:</div>
             <div className="btn_control">
-              <button onClick={() => onRemove(item.id)} className="btn_minus">
-                -
+              <button title="Remove" disabled={item.qty===1} onClick={() => onRemove(item.id)} className="btn_minus">
+                −
               </button>
-              <button onClick={() => onAdd(item.id)} className="btn_plus">
+              <input className="input_sum" type="text" value={item.qty}></input>
+              <button title="Add" onClick={() => onAdd(item.id)} className="btn_plus">
                 +
               </button>
-            </div>
-            <div className="item_qty">
-              {item.qty} kg: {item.price} $
+              <div className="item_qty">Total: {item.price} $</div>
+              <button title="Delete" onClick={() => onDelete(item.id)} className="btn_del">
+                ☓
+              </button>
             </div>
           </div>
         ))}
@@ -45,9 +44,7 @@ const CartComponent = (
             <div className="item_price">
               <div className="item_total">
                 <strong>Total Price:</strong>
-              </div>
-              <div>
-                <strong>{totalPrice.toFixed(2)} $</strong>
+                <strong className="item_cost">{totalPrice.toFixed(2)} $</strong>
               </div>
             </div>
           </>
@@ -59,14 +56,15 @@ const CartComponent = (
 
 CartComponent.propTypes = {
   onRemove: PropTypes.func.isRequired,
+  onDelete: PropTypes.func.isRequired,
   onAdd: PropTypes.func.isRequired,
   item: PropTypes.object.isRequired,
-  accum: PropTypes.object.isRequired
+  accum: PropTypes.object.isRequired,
 };
 
 CartComponent.defaultProps = {
   item: {},
-  accum: {}
+  accum: {},
 };
 
 export default CartComponent;

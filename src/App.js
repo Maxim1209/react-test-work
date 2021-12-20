@@ -6,12 +6,15 @@ import { useState } from "react";
 import MainComponent from "./Components/MainComponent";
 
 function App() {
-  const { products } = data;
+  const { products, discountAvailables } = data;
   const [cartItems, setCartItems] = useState([]);
 
-  const isPapaya = (name) => name === "Papaya";
+  const isDiscountAvailable = productSlug =>{
+    return discountAvailables.includes(productSlug)
+  }
+  
   const generatePriceWithDiscount = (product, quantity) => {
-    return isPapaya(product.name) && quantity % 3 === 0
+    return isDiscountAvailable(product.slug) && quantity % 3 === 0
       ? product.price - 5
       : product.price;
   };
@@ -32,10 +35,8 @@ function App() {
             existingCartProduct.price +
             generatePriceWithDiscount(currentProduct, quantity),
         };
-
         return item.id === productId ? updatedProduct : item;
       });
-
       setCartItems(updatedCart);
     } else {
       const newProduct = {
@@ -50,40 +51,46 @@ function App() {
     }
   };
 
+  const onDelete = (productId) => {
+    setCartItems(cartItems.filter((item) => item.id !== productId));
+  };
+
   const onRemove = (productId) => {
     const existingCartProduct = cartItems.find((item) => item.id === productId);
     const currentProduct = products.find((item) => item.id === productId);
 
     if (existingCartProduct.qty === 1) {
-      setCartItems(cartItems.filter((item) => item.id !== productId));
-    } else {
-      setCartItems(
-        cartItems.map((item) => {
-          const quantity = existingCartProduct.qty;
-          const updatedProduct = {
-            name: existingCartProduct.name,
-            image: existingCartProduct.name,
-            id: existingCartProduct.id,
-            qty: quantity - 1,
-            price:
-              existingCartProduct.price -
-              generatePriceWithDiscount(currentProduct, quantity),
-          };
-
-          return item.id === productId ? updatedProduct : item;
-        })
-      );
+      return;
     }
+
+    setCartItems(
+      cartItems.map((item) => {
+        const quantity = existingCartProduct.qty;
+        const updatedProduct = {
+          name: existingCartProduct.name,
+          image: existingCartProduct.name,
+          id: existingCartProduct.id,
+          qty: quantity - 1,
+          price:
+            existingCartProduct.price -
+            generatePriceWithDiscount(currentProduct, quantity),
+        };
+
+        return item.id === productId ? updatedProduct : item;
+      })
+    );
   };
   return (
-    <div className="container">
+    <div className="container wrapper_outer">
       <Header countCartItems={cartItems.length} />
       <div className="">
         <Routes>
           <Route
             exact
             path="/"
-            element={<MainComponent products={products} onAdd={onAdd}></MainComponent>}
+            element={
+              <MainComponent products={products} onAdd={onAdd}></MainComponent>
+            }
           />
           <Route
             exact
@@ -93,6 +100,7 @@ function App() {
                 cartItems={cartItems}
                 onAdd={onAdd}
                 onRemove={onRemove}
+                onDelete={onDelete}
               ></Basket>
             }
           />
